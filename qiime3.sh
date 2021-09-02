@@ -1,31 +1,31 @@
 ########################################  
 # QIIME2 ----------------
 ########################################  
-# from https://github.com/BikLab/BITMaB2-Tutorials/blob/master/QIIME2-metabarcoding-tutorial-already-demultiplexed-fastqs.md
 
-SEQS1=~/Documents/SEQS/2019_Plate1/18S_V4/fastq/
-L1=240
-L2=220
+# Start new session of qiime2
+source activate qiime2-2018.11 
 
-source activate qiime2-2018.11 # use this to start new session of qiime
+# Define variables
+SEQS1=~/FILELOCATION/fastq/
 
-cd ~/Documents/QIIME/Algae/18S_V4_Plate1
-
-# import files as artifact -------------
+# import files as artifact 
 qiime tools import \
 --type 'SampleData[PairedEndSequencesWithQuality]' \
 --input-path $SEQS1 \
 --input-format CasavaOneEightSingleLanePerSampleDirFmt \
 --output-path demux-paired-end.qza
 
-# generate visualization file ----------
+# generate visualization file 
 qiime demux summarize \
 --i-data demux-paired-end.qza \
 --o-visualization demux.qzv
-# now drag and drop your demux.qzv file into view.qiime2.org
+# now drag and drop your demux.qzv file into view.qiime2.org, determine L1 and L2 values
 # download the resulting csv file with read counds 
 
-# now use dada2 to quality filter (this will take a while) -------
+L1=240 # truncate length forward
+L2=220 # truncate length reverse
+
+# now use dada2 to quality filter (this will take a while) 
 qiime dada2 denoise-paired \
 --i-demultiplexed-seqs demux-paired-end.qza \
 --p-trim-left-f 0 \
@@ -40,8 +40,8 @@ qiime dada2 denoise-paired \
 --o-denoising-stats stats.gza
 
 # done correctly, dada2 will generate 
-Saved FeatureTable[Frequency] to: table.qza
-Saved FeatureData[Sequence] to: rep-seqs.qza
+# Saved FeatureTable[Frequency] to: table.qza
+# Saved FeatureData[Sequence] to: rep-seqs.qza
 
 
 ###################################################
@@ -73,16 +73,16 @@ qiime feature-classifier classify-consensus-blast \
 --p-perc-identity 0.90 \
 --p-maxaccepts 1
 
+###################################################
+#### Export OTU (ASV) Table 
+###################################################
 
-#### export taxonomy 3 ---------------
 # export biom with taxonomy
 # from here: https://forum.qiime2.org/t/exporting-and-modifying-biom-tables-e-g-adding-taxonomy-annotations/3630
 qiime tools export --input-path stats.gza.qza --output-path exported_stats
 qiime tools export --input-path table.qza --output-path exported
 qiime tools export --input-path taxonomy.qza --output-path exported
 cd exported
-
-#perl -pe 's/Feature/OTU/' taxonomy.tsv > taxonomy2.tsv
 
 # edit the taxonomy.tsv header to be #OTUID	taxonomy	confidence
 biom add-metadata -i feature-table.biom -o table-with-taxonomy.biom --observation-metadata-fp taxonomy.tsv --sc-separated taxonomy
