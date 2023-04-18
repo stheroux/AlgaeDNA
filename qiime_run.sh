@@ -2,10 +2,7 @@
 # QIIME2 ----------------
 ########################################  
 
-cd ~/Documents/QIIME/Algae/Plate1/rbcL
 conda activate qiime2-2022.11   # use this to start new session of qiime
-
-SEQS1= "~/Documents/SEQS/Run1/fastq/"
 
 # import files as artifact -------------
 qiime tools import \
@@ -29,9 +26,6 @@ qiime demux summarize \
 # now drag and drop your demux.qzv file into view.qiime2.org
 # download the resulting csv file with read counds 
 
-L1=220
-L2=220
-
 # now use dada2 to quality filter (this will take a while) -------
 qiime dada2 denoise-paired \
 --i-demultiplexed-seqs demux-paired-end-tr.qza \
@@ -54,11 +48,6 @@ qiime dada2 denoise-paired \
 ###################################################
 # assign taxonomy ------
 ###################################################
-
-# taxonomy 
-FASTA=~/Documents/DBS/rbcL_gen_rsyst/fasta.fasta
-TAX=~/Documents/DBS/rbcL_gen_rsyst/tax.txt
-
 
 # import fasta db -----
 qiime tools import \
