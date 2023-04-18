@@ -14,9 +14,9 @@ qiime tools import \
 qiime cutadapt trim-paired \
 --i-demultiplexed-sequences demux-paired-end.qza \
 --p-cores 1 \
---p-front-f AGGTGAAGTAAAAGGTTCWTACTTAAA \
---p-front-r CCTTCTAATTTACCWACWACTG \
---p-error-rate 0.2 \
+--p-front-f $P1 \
+--p-front-r $P2 \
+--p-error-rate $PE \
 --o-trimmed-sequences demux-paired-end-tr.qza
 
 # generate visualization file ----------
@@ -69,8 +69,8 @@ qiime feature-classifier classify-consensus-blast \
 --i-reference-taxonomy tax.qza \
 --i-reference-reads fasta.qza \
 --output-dir taxonomy \
---p-perc-identity 0.97 \
---p-maxaccepts 1
+--p-perc-identity $B1 \
+--p-maxaccepts $B2
 
 #######################################
 # export  -----------
